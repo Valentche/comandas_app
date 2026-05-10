@@ -1,14 +1,14 @@
 import {
-  AppBar, Toolbar, Typography, Button, Box, IconButton, Tooltip,
-  Avatar, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider,
+  AppBar, Toolbar, Typography, Box, IconButton, Avatar, Drawer, List, ListItem, ListItemIcon, ListItemText
 } from "@mui/material";
 import {
-  Dashboard, People, Group, RestaurantMenu, Receipt,
-  PointOfSale, Logout, AccountCircle, Menu as MenuIcon,
+  Dashboard, People, Group, RestaurantMenu, Receipt, PointOfSale, Logout, Menu as MenuIcon
 } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
+
+const drawerWidth = 260;
 
 const menuItems = [
   { label: "Dashboard", icon: <Dashboard />, path: "/home" },
@@ -21,139 +21,103 @@ const menuItems = [
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // Para saber qual menu está ativo
   const { isAuthenticated, logout, usuarioLogado } = useAuth();
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const handleLogout = () => { setDrawerOpen(false); logout(); };
-  const navTo = (path) => { setDrawerOpen(false); navigate(path); };
+  const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
+  const navTo = (path) => { setMobileOpen(false); navigate(path); };
+  const handleLogout = () => { setMobileOpen(false); logout(); };
+
+  if (!isAuthenticated) return null; // Esconde o menu na tela de login
 
   const drawer = (
-    <Box sx={{ width: 260 }}>
-      <Box sx={{ p: 2, background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)" }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Avatar sx={{ bgcolor: "#f59e0b", width: 40, height: 40, fontWeight: 700 }}>
-            {usuarioLogado?.nome?.[0] || "U"}
-          </Avatar>
-          <Box>
-            <Typography variant="body1" fontWeight={700} color="white">
-              {usuarioLogado?.nome || "Usuário"}
-            </Typography>
-            <Typography variant="caption" sx={{ color: "rgba(255,255,255,0.6)" }}>
-              Mat. {usuarioLogado?.matricula || "-"}
-            </Typography>
-          </Box>
-        </Box>
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: '#e0f2fe' }}>
+      {/* Logo Area */}
+      <Box sx={{ p: 3, display: "flex", alignItems: "center", gap: 1, mt: 1 }}>
+        <RestaurantMenu sx={{ color: "#f59e0b", fontSize: "2.2rem" }} />
+        <Typography variant="h6" sx={{ fontWeight: 800, color: '#1e293b', lineHeight: 1.2 }}>
+          Comandas<br/>do Zé
+        </Typography>
       </Box>
-      <List>
-        {menuItems.map((item) => (
-          <ListItem
-            button key={item.path}
-            onClick={() => navTo(item.path)}
-            sx={{ "&:hover": { bgcolor: "rgba(30,41,59,0.06)" }, cursor: "pointer" }}
-          >
-            <ListItemIcon sx={{ color: "primary.main" }}>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.label} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        <ListItem button onClick={() => navTo("/perfil")} sx={{ cursor: "pointer", "&:hover": { bgcolor: "rgba(30,41,59,0.06)" } }}>
-          <ListItemIcon sx={{ color: "primary.main" }}><AccountCircle /></ListItemIcon>
-          <ListItemText primary="Perfil" />
-        </ListItem>
-        <ListItem button onClick={handleLogout} sx={{ cursor: "pointer", "&:hover": { bgcolor: "rgba(239,68,68,0.08)" } }}>
-          <ListItemIcon sx={{ color: "error.main" }}><Logout /></ListItemIcon>
-          <ListItemText primary="Sair" sx={{ color: "error.main" }} />
-        </ListItem>
+      
+      {/* Menu Links */}
+      <List sx={{ px: 2, flexGrow: 1, mt: 2 }}>
+        {menuItems.map((item) => {
+          const isActive = location.pathname.includes(item.path);
+          return (
+            <ListItem
+              button key={item.path} onClick={() => navTo(item.path)}
+              sx={{
+                mb: 1, borderRadius: 3, cursor: "pointer",
+                bgcolor: isActive ? "#ffffff" : "transparent",
+                color: isActive ? "#f59e0b" : "#64748b",
+                boxShadow: isActive ? '0 4px 10px rgba(0,0,0,0.03)' : 'none',
+                "&:hover": { bgcolor: isActive ? "#ffffff" : "rgba(255,255,255,0.4)" },
+              }}
+            >
+              <ListItemIcon sx={{ color: "inherit", minWidth: 40 }}>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.label} primaryTypographyProps={{ fontWeight: isActive ? 700 : 500 }} />
+            </ListItem>
+          );
+        })}
       </List>
     </Box>
   );
 
   return (
-    <AppBar position="sticky" elevation={2}>
-      <Toolbar sx={{ minHeight: 64, px: { xs: 1, sm: 2 } }}>
-        {/* Logo */}
-        <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
-          <Typography
-            variant="h5" component="div"
-            sx={{
-              fontWeight: 700,
-              background: "linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)",
-              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-              backgroundClip: "text", display: "flex", alignItems: "center", gap: 1,
-              fontSize: { xs: "1.2rem", sm: "1.5rem" }, cursor: "pointer",
-            }}
-            onClick={() => isAuthenticated && navigate("/home")}
-          >
-            <RestaurantMenu sx={{ color: "#f59e0b", fontSize: { xs: "1.5rem", sm: "2rem" } }} />
-            <Box component="span" sx={{ display: { xs: "none", sm: "inline" } }}>Comandas do Zé</Box>
-            <Box component="span" sx={{ display: { xs: "inline", sm: "none" } }}>Zé</Box>
-          </Typography>
-        </Box>
+    <>
+      {/* Topbar Clean (Apenas info do usuário e botão mobile) */}
+      <AppBar position="fixed" sx={{ 
+        width: { lg: `calc(100% - ${drawerWidth}px)` }, 
+        ml: { lg: `${drawerWidth}px` },
+        borderBottom: '1px solid rgba(0,0,0,0.05)'
+      }}>
+        <Toolbar sx={{ justifyContent: { xs: 'space-between', lg: 'flex-end' }, minHeight: '70px !important' }}>
+          <IconButton color="inherit" edge="start" onClick={handleDrawerToggle} sx={{ display: { lg: "none" }, color: '#1e293b' }}>
+            <MenuIcon />
+          </IconButton>
 
-        {/* Menu desktop */}
-        {isAuthenticated && (
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-            <Box sx={{ display: { xs: "none", lg: "flex" }, alignItems: "center", gap: 0.5 }}>
-              {menuItems.map((item) => (
-                <Tooltip key={item.path} title={item.label} arrow>
-                  <Button
-                    color="inherit"
-                    onClick={() => navigate(item.path)}
-                    sx={{
-                      minWidth: "auto", px: 1.2, py: 0.8, borderRadius: 2,
-                      display: "flex", alignItems: "center", gap: 0.5,
-                      "&:hover": { bgcolor: "rgba(255,255,255,0.1)" },
-                    }}
-                  >
-                    {item.icon}
-                    <Typography variant="body2" sx={{ ml: 0.3, display: { xs: "none", xl: "inline" } }}>
-                      {item.label}
-                    </Typography>
-                  </Button>
-                </Tooltip>
-              ))}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ textAlign: 'right', display: { xs: 'none', sm: 'block' } }}>
+              <Typography variant="body1" sx={{ fontWeight: 700, color: '#1e293b' }}>
+                {usuarioLogado?.nome || "Pablo Valente"}
+              </Typography>
+              <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 500 }}>
+                {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'short' })}
+              </Typography>
             </Box>
-
-            {/* Perfil e logout desktop */}
-            <Box sx={{ display: { xs: "none", lg: "flex" }, alignItems: "center", gap: 0.5, ml: 1 }}>
-              <Tooltip title="Perfil" arrow>
-                <IconButton color="inherit" onClick={() => navigate("/perfil")}>
-                  <Avatar sx={{ width: 32, height: 32, bgcolor: "#f59e0b", fontSize: ".9rem", fontWeight: 700 }}>
-                    {usuarioLogado?.nome?.[0] || <AccountCircle />}
-                  </Avatar>
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Sair" arrow>
-                <IconButton color="inherit" onClick={handleLogout} sx={{ "&:hover": { bgcolor: "rgba(239,68,68,0.15)" } }}>
-                  <Logout />
-                </IconButton>
-              </Tooltip>
-            </Box>
-
-            {/* Hamburguer mobile */}
-            <IconButton
-              color="inherit"
-              onClick={() => setDrawerOpen(true)}
-              sx={{ display: { xs: "flex", lg: "none" }, "&:hover": { bgcolor: "rgba(255,255,255,0.1)" } }}
+            <Avatar 
+              sx={{ bgcolor: "#f59e0b", width: 42, height: 42, fontWeight: 700, cursor: 'pointer', boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)' }} 
+              onClick={() => navTo('/perfil')}
             >
-              <MenuIcon />
+              {usuarioLogado?.nome?.[0]?.toUpperCase() || "A"}
+            </Avatar>
+            <IconButton onClick={handleLogout} sx={{ color: '#ef4444', ml: 1, '&:hover': { bgcolor: 'rgba(239, 68, 68, 0.1)' } }}>
+              <Logout />
             </IconButton>
           </Box>
-        )}
-      </Toolbar>
+        </Toolbar>
+      </AppBar>
 
-      <Drawer
-        anchor="right"
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        ModalProps={{ keepMounted: true }}
-        sx={{ display: { xs: "block", lg: "none" }, "& .MuiDrawer-paper": { width: 260 } }}
-      >
-        {drawer}
-      </Drawer>
-    </AppBar>
+      {/* Sidebar (Gaveta) */}
+      <Box component="nav" sx={{ width: { lg: drawerWidth }, flexShrink: { lg: 0 } }}>
+        {/* Mobile */}
+        <Drawer
+          variant="temporary" open={mobileOpen} onClose={handleDrawerToggle} ModalProps={{ keepMounted: true }}
+          sx={{ display: { xs: "block", lg: "none" }, "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth, border: 'none' } }}
+        >
+          {drawer}
+        </Drawer>
+        {/* Desktop */}
+        <Drawer
+          variant="permanent" open
+          sx={{ display: { xs: "none", lg: "block" }, "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth, border: 'none' } }}
+        >
+          {drawer}
+        </Drawer>
+      </Box>
+    </>
   );
 };
 

@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = (cpf, senha) => {
     if (cpf === "abc" && senha === "bolinhas") {
-      const usuario = { nome: "Administrador", cpf, grupo: 1, matricula: "0001" };
+      const usuario = { nome: "Pablo Valente", cpf, grupo: 1, matricula: "0001" };
       setIsAuthenticated(true);
       setUsuarioLogado(usuario);
       sessionStorage.setItem("loginRealizado", "true");

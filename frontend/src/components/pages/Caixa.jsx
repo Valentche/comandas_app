@@ -3,9 +3,9 @@ import { PointOfSale, TrendingUp, Receipt, CheckCircle } from "@mui/icons-materi
 import PageLayout from "../common/PageLayout";
 
 const movimentos = [
-  { id: 1, comanda: "001", cliente: "Ana Paula Costa", valor: 87.50, forma: "Cartão", hora: "10:45" },
+  { id: 1, comanda: "001", cliente: "Alan Felipe Jones", valor: 87.50, forma: "Cartão", hora: "10:45" },
   { id: 2, comanda: "002", cliente: "Sem cliente", valor: 34.00, forma: "Dinheiro", hora: "11:20" },
-  { id: 3, comanda: "003", cliente: "Bruno Lima", valor: 123.90, forma: "Pix", hora: "12:05" },
+  { id: 3, comanda: "003", cliente: "Tony Hawk", valor: 123.90, forma: "Pix", hora: "12:05" },
 ];
 
 const total = movimentos.reduce((s, m) => s + m.valor, 0);
@@ -15,7 +15,7 @@ function Caixa() {
   return (
     <PageLayout title="Caixa" maxWidth="xl">
       {/* Resumo */}
-      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr 1fr", md: "repeat(4,1fr)" }, gap: 2, mb: 3 }}>
+      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "repeat(4,1fr)" }, gap: 4, mb: 4 }}>
         {[
           { icon: <PointOfSale />, label: "Total do dia", value: fmt(total), color: "#10b981" },
           { icon: <Receipt />, label: "Comandas fechadas", value: "3", color: "#3b82f6" },

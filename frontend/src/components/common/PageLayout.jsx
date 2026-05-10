@@ -1,67 +1,48 @@
-import { Box, Typography, Paper } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
-const PageLayout = ({ children, title, actions, maxWidth = 'lg' }) => (
-  <Box
-    sx={{
-      width: '100%',
-      maxWidth: maxWidth === 'lg' ? 1200 : maxWidth === 'md' ? 900 : 600,
-      mx: 'auto',
-      p: { xs: 1, sm: 2, md: 3 },
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-    }}
-  >
-    <Box sx={{ width: '100%', maxWidth: '100%' }}>
-      <Paper
-        elevation={2}
-        sx={{
-          p: { xs: 2, sm: 3 },
-          mb: 3,
-          background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
-          color: 'white',
-          borderRadius: 3,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: 2,
-        }}
-      >
-        <Typography
-          variant="h4"
-          component="h1"
-          sx={{
-            fontWeight: 600,
-            color: 'white',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-            fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' },
-          }}
-        >
-          {title}
-        </Typography>
-        {actions && (
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            {actions}
-          </Box>
-        )}
-      </Paper>
-      <Paper
-        elevation={1}
-        sx={{
-          p: { xs: 2, sm: 3 },
-          borderRadius: 3,
-          backgroundColor: 'background.paper',
-          minHeight: 400,
-          width: '100%',
-        }}
-      >
-        {children}
-      </Paper>
+const PageLayout = ({ children, title, actions, maxWidth = 'lg' }) => {
+  
+  // Agora o layout sabe como lidar com telas "xl" (Extra Large) e vai liberar o espaço!
+  const getMaxWidth = () => {
+    if (maxWidth === 'xl') return 1536; 
+    if (maxWidth === 'lg') return 1200;
+    if (maxWidth === 'md') return 900;
+    return 600;
+  };
+
+  return (
+    <Box
+      sx={{
+        width: '100%',
+        minHeight: '100vh',
+        pl: { lg: '170px' }, // Empurra o conteúdo para não ficar atrás da Sidebar no Desktop
+        pt: '85px',          // Empurra para baixo para não ficar atrás da Topbar
+        pb: 4,
+        bgcolor: 'background.default',
+      }}
+    >
+      <Box sx={{ width: '100%', maxWidth: getMaxWidth(), ml: 0, px: { xs: 2, sm: 3 } }}>
+        
+        {/* Título Limpo e Moderno */}
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2, mb: 4 }}>
+          <Typography variant="h4" component="h1" sx={{ fontWeight: 800, color: 'text.primary', letterSpacing: '-0.5px' }}>
+            {title}
+          </Typography>
+          {actions && (
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+              {actions}
+            </Box>
+          )}
+        </Box>
+
+        {/* Área de Conteúdo Livre (Sem aquela caixa branca por trás de tudo) */}
+        <Box sx={{ width: '100%' }}>
+          {children}
+        </Box>
+        
+      </Box>
     </Box>
-  </Box>
-);
+  );
+};
 
 export default PageLayout;

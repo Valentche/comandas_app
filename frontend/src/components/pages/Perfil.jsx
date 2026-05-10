@@ -4,7 +4,7 @@ import PageLayout from "../common/PageLayout";
 import { useAuth } from "../../context/AuthContext";
 
 // Imagem de perfil placeholder - substituir pelo rosto do aluno
-const FOTO_PERFIL = "https://ui-avatars.com/api/?name=Administrador&background=f59e0b&color=fff&size=128&bold=true";
+const FOTO_PERFIL = "/eu_512.png";
 
 const grupos = { 1: "Administrador", 2: "Gerente", 3: "Atendente", 4: "Cozinha" };
 
@@ -20,7 +20,7 @@ const InfoRow = ({ icon, label, value }) => (
 
 function Perfil() {
   const { usuarioLogado } = useAuth();
-  const usuario = usuarioLogado || { nome: "Administrador", cpf: "abc", matricula: "0001", grupo: 1 };
+  const usuario = usuarioLogado || { nome: "Pablo Valente", cpf: "abc", matricula: "0001", grupo: 1 };
 
   return (
     <PageLayout title="Meu Perfil" maxWidth="md">
@@ -61,13 +61,6 @@ function Perfil() {
             <InfoRow icon={<AdminPanelSettings />} label="Grupo de acesso" value={grupos[usuario.grupo] || "-"} />
           </CardContent>
         </Card>
-      </Box>
-
-      {/* Nota sobre a foto */}
-      <Box sx={{ mt: 2, p: 2, bgcolor: "rgba(245,158,11,0.08)", borderRadius: 2, border: "1px dashed #f59e0b" }}>
-        <Typography variant="body2" color="text.secondary" textAlign="center">
-          📸 <strong>Atenção:</strong> substitua a imagem de perfil pela sua foto real no arquivo <code>Perfil.jsx</code>
-        </Typography>
       </Box>
     </PageLayout>
   );

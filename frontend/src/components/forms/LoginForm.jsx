@@ -40,8 +40,8 @@ const LoginForm = () => {
   };
 
   return (
-    <Box sx={{ minHeight: "100vh", background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)", display: "flex", alignItems: "center", justifyContent: "center", p: 2 }}>
-      <Paper elevation={8} sx={{ p: { xs: 3, sm: 4 }, maxWidth: 420, width: "100%", borderRadius: 3 }}>
+    <Box sx={{ minHeight: "100vh", background: "linear-gradient(135deg, #E0F2FE 50%, #F59E0B 50%)", display: "flex", alignItems: "center", justifyContent: "center", p: 2 }}>
+      <Paper elevation={8} sx={{ p: { xs: 3, sm: 4 }, maxWidth: 420, width: "100%", borderRadius: 3, boxShadow: "0 40px 80px rgba(0, 0, 0, 0.3)" }}>
         <Box sx={{ textAlign: "center", mb: 3 }}>
           <Avatar sx={{ width: 64, height: 64, bgcolor: "#f59e0b", mx: "auto", mb: 2 }}>
             <MenuIcon sx={{ fontSize: 32 }} />
