@@ -3,7 +3,7 @@ import { createTheme } from '@mui/material/styles';
 export const theme = createTheme({
   palette: {
     mode: 'light',
-    primary: { main: '#1e293b', light: '#334155' },
+    primary: { main: '#F59E0B', light: '#334155' },
     secondary: { main: '#f59e0b', light: '#fbbf24' },
     success: { main: '#10b981' },
     error: { main: '#ef4444', light: '#f87171' },
@@ -27,7 +27,7 @@ export const theme = createTheme({
     },
     MuiAppBar: {
       styleOverrides: {
-        root: { background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)' },
+        root: { background: 'linear-gradient(20deg, #E0F1FD 50%, #ffffff 100%)' },
       },
     },
     MuiTextField: {

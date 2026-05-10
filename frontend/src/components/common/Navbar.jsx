@@ -1,3 +1,4 @@
+import minhaFoto from "../../assets/eu_512.png";
 import {
   AppBar, Toolbar, Typography, Box, IconButton, Avatar, Drawer, List, ListItem, ListItemIcon, ListItemText
 } from "@mui/material";
@@ -88,7 +89,9 @@ const Navbar = () => {
               </Typography>
             </Box>
             <Avatar 
-              sx={{ bgcolor: "#f59e0b", width: 42, height: 42, fontWeight: 700, cursor: 'pointer', boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)' }} 
+              src={minhaFoto}
+              alt="Minha foto"
+              sx={{ width: 42, height: 42, fontWeight: 700, cursor: 'pointer', boxShadow: '0 2px 8px rgba(245, 158, 11, 0.3)' }} 
               onClick={() => navTo('/perfil')}
             >
               {usuarioLogado?.nome?.[0]?.toUpperCase() || "A"}

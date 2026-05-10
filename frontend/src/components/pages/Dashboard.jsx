@@ -1,3 +1,4 @@
+import minhaFoto from "../../assets/eu_512.png";
 import {
   Box,
   Typography,
@@ -110,7 +111,9 @@ function Dashboard() {
       {/* Boas-vindas */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3 }}>
         <Avatar
-          sx={{ bgcolor: "#f59e0b", width: 48, height: 48, fontWeight: 700 }}
+          src={minhaFoto}
+          alt="Minha foto"
+          sx={{ width: 48, height: 48, fontWeight: 700 }}
         >
           {nome[0]}
         </Avatar>

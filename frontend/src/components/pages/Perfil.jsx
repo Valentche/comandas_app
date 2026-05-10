@@ -4,7 +4,7 @@ import PageLayout from "../common/PageLayout";
 import { useAuth } from "../../context/AuthContext";
 
 // Imagem de perfil placeholder - substituir pelo rosto do aluno
-const FOTO_PERFIL = "/eu_512.png";
+const FOTO_PERFIL = "src/assets/eu_512.png";
 
 const grupos = { 1: "Administrador", 2: "Gerente", 3: "Atendente", 4: "Cozinha" };
 

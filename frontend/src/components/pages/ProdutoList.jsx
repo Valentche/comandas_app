@@ -22,24 +22,24 @@ function ProdutoList() {
   const produtos = [
     {
       id: 1,
-      nome: "Hambúrguer Clássico",
-      descricao: "Pão, carne, alface, tomate, queijo",
+      nome: "X-Infarto",
+      descricao: "Pão, carne, alface, tomate, queijo, ovo, maionese caseira, mostarda, batata palha, cebola caramelizada, bacon, calabresa, presunto, 2 salsichas, pepino, milho e ervilha",
       valor_unitario: 25.9,
-      foto: "/src/assets/hero.png",
+      foto: "/src/assets/hamburguer_classico.png",
     },
     {
       id: 2,
       nome: "Batata Frita",
-      descricao: "Porção média de batata crocante",
+      descricao: "Porção média de batata crocante (e não requentado)",
       valor_unitario: 12.5,
-      foto: "/src/assets/vite.svg",
+      foto: "/src/assets/batata_frita.png",
     },
     {
       id: 3,
-      nome: "Refrigerante",
-      descricao: "Lata 350ml",
+      nome: "Refrigerante Tubalinda de Maça",
+      descricao: "2 Litros",
       valor_unitario: 8.0,
-      foto: "/src/assets/react.svg",
+      foto: "/src/assets/refrigerante.png",
     },
   ];
   const actions = (
