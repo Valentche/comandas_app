@@ -1,11 +1,10 @@
-// arquivo de rotas da aplicação usando React Router v6, a versão mais recente do React Router
 import { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import RestrictedRoute from "./RestrictedRoute";
-// Lazy Loading para otimização (code-splitting)
-// Os componentes das páginas são carregados de forma assíncrona usando React.lazy.
-// Suspense + lazy() dividem o código em chunks separados, melhorando o desempenho.
+import { CircularProgress, Box } from "@mui/material";
+
+// Lazy loading para code-splitting e melhor performance
 const Dashboard = lazy(() => import("../components/pages/Dashboard"));
 const FuncionarioList = lazy(() => import("../components/pages/FuncionarioList"));
 const FuncionarioForm = lazy(() => import("../components/pages/FuncionarioForm"));
@@ -13,93 +12,53 @@ const ClienteList = lazy(() => import("../components/pages/ClienteList"));
 const ClienteForm = lazy(() => import("../components/pages/ClienteForm"));
 const ProdutoList = lazy(() => import("../components/pages/ProdutoList"));
 const ProdutoForm = lazy(() => import("../components/pages/ProdutoForm"));
+const ComandaList = lazy(() => import("../components/pages/ComandaList"));
+const ComandaForm = lazy(() => import("../components/pages/ComandaForm"));
+const Caixa = lazy(() => import("../components/pages/Caixa"));
+const Perfil = lazy(() => import("../components/pages/Perfil"));
 const LoginForm = lazy(() => import("../components/forms/LoginForm"));
 const NotFound = lazy(() => import("../components/pages/NotFound"));
-// Loader para o Suspense - melhora a experiência do usuário em aplicações maiores.
-// Sempre que uma rota for acessada, o Suspense exibirá o fallback (Carregando...) até que o componente da rota seja carregado.
-const Loading = () => <div>Carregando...</div>;
-const AppRoutes = () => {
-  return (
-    // O componente Suspense foi adicionado ao redor do Routes para exibir um fallback (<Loading />) enquanto os componentes são carregados.
-    // O fallback é exibido enquanto os componentes carregados com React.lazy estão sendo baixados.
-    // Isso melhora a experiência do usuário, especialmente em aplicações maiores onde o carregamento pode levar mais tempo.
-    // O Suspense é uma funcionalidade do React que permite lidar com o carregamento assíncrono de componentes.
-    <Suspense fallback={<Loading />}>
-      <Routes>
-        {/* Redireciona a rota raiz para a página de login */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        {/* Rotas públicas - sem necessidade de autenticação */}
-        <Route path="/produtos/publica" element={<ProdutoList />} />
-        {/* Rotas restritas - somente se não estiver logado */}
-        <Route
-          path="/login"
-          element={
-            <RestrictedRoute>
-              <LoginForm />
-            </RestrictedRoute>
-          }
-        />
-        {/* Rotas protegidas - somente se estiver logado */}
-        <Route
-          path="/home"
-          element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/produtos"
-          element={
-            <PrivateRoute>
-              <ProdutoList />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/produto"
-          element={
-            <PrivateRoute>
-              <ProdutoForm />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/funcionarios"
-          element={
-            <PrivateRoute>
-              <FuncionarioList />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/funcionario"
-          element={
-            <PrivateRoute>
-              <FuncionarioForm />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/clientes"
-          element={
-            <PrivateRoute>
-              <ClienteList />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/cliente"
-          element={
-            <PrivateRoute>
-              <ClienteForm />
-            </PrivateRoute>
-          }
-        />
-        {/* Rota para páginas não encontradas */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Suspense>
-  );
-};
+
+const Loading = () => (
+  <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh" }}>
+    <CircularProgress color="secondary" />
+  </Box>
+);
+
+const priv = (el) => <PrivateRoute>{el}</PrivateRoute>;
+
+const AppRoutes = () => (
+  <Suspense fallback={<Loading />}>
+    <Routes>
+      <Route path="/" element={<Navigate to="/login" replace />} />
+
+      {/* Rota pública */}
+      <Route path="/produtos/publica" element={<ProdutoList />} />
+
+      {/* Rota restrita - só sem login */}
+      <Route path="/login" element={<RestrictedRoute><LoginForm /></RestrictedRoute>} />
+
+      {/* Rotas protegidas */}
+      <Route path="/home" element={priv(<Dashboard />)} />
+      <Route path="/funcionarios" element={priv(<FuncionarioList />)} />
+      <Route path="/funcionario" element={priv(<FuncionarioForm />)} />
+      <Route path="/funcionario/:id" element={priv(<FuncionarioForm />)} />
+      <Route path="/clientes" element={priv(<ClienteList />)} />
+      <Route path="/cliente" element={priv(<ClienteForm />)} />
+      <Route path="/cliente/:id" element={priv(<ClienteForm />)} />
+      <Route path="/produtos" element={priv(<ProdutoList />)} />
+      <Route path="/produto" element={priv(<ProdutoForm />)} />
+      <Route path="/produto/:id" element={priv(<ProdutoForm />)} />
+      <Route path="/comandas" element={priv(<ComandaList />)} />
+      <Route path="/comanda" element={priv(<ComandaForm />)} />
+      <Route path="/comanda/:id" element={priv(<ComandaForm />)} />
+      <Route path="/caixa" element={priv(<Caixa />)} />
+      <Route path="/perfil" element={priv(<Perfil />)} />
+
+      {/* 404 */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  </Suspense>
+);
+
 export default AppRoutes;

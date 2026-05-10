@@ -1,45 +1,49 @@
 import { createContext, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import showSnackbar from "../utils/snackbar";
 
-// Criação do contexto
 const AuthContext = createContext();
 
-// Provedor do contexto
 export const AuthProvider = ({ children }) => {
-  // Inicializa o estado com base no valor do sessionStorage
-  // sessionStorage é um armazenamento temporário que persiste enquanto a aba estiver aberta
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return sessionStorage.getItem("loginRealizado") === "true";
   });
+  const [usuarioLogado, setUsuarioLogado] = useState(() => {
+    const saved = sessionStorage.getItem("usuarioLogado");
+    return saved ? JSON.parse(saved) : null;
+  });
 
-  // useNavigate é um hook do React Router que permite programaticamente navegar entre rotas
+  // loading é false pois sessionStorage é síncrono
+  const loading = false;
+
   const navigate = useNavigate();
 
-  // Função para login
-  // ainda com dados fixos, posteriormente será implementado chamada à API
   const login = (cpf, senha) => {
     if (cpf === "abc" && senha === "bolinhas") {
+      const usuario = { nome: "Administrador", cpf, grupo: 1, matricula: "0001" };
       setIsAuthenticated(true);
+      setUsuarioLogado(usuario);
       sessionStorage.setItem("loginRealizado", "true");
+      sessionStorage.setItem("usuarioLogado", JSON.stringify(usuario));
       navigate("/home");
     } else {
-      alert("Usuário ou senha inválidos!");
+      showSnackbar("Usuário ou senha inválidos!", "error");
     }
   };
 
-  // Função para logout
   const logout = () => {
     setIsAuthenticated(false);
+    setUsuarioLogado(null);
     sessionStorage.removeItem("loginRealizado");
+    sessionStorage.removeItem("usuarioLogado");
     navigate("/login");
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, loading, login, logout, usuarioLogado }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Hook para usar o contexto
 export const useAuth = () => useContext(AuthContext);
