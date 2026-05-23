@@ -18,6 +18,9 @@ const Caixa = lazy(() => import("../components/pages/Caixa"));
 const Perfil = lazy(() => import("../components/pages/Perfil"));
 const LoginForm = lazy(() => import("../components/forms/LoginForm"));
 const NotFound = lazy(() => import("../components/pages/NotFound"));
+const ProdutoList = lazy(() => import("../pages/ProdutoList"));
+const ProdutoForm = lazy(() => import("../pages/ProdutoForm"));
+const ProdutoListPublic = lazy(() => import("../pages/ProdutoListPublic"));
 
 const Loading = () => (
   <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh" }}>
@@ -34,6 +37,7 @@ const AppRoutes = () => (
 
       {/* Rota pública */}
       <Route path="/produtos/publica" element={<ProdutoList />} />
+      <Route path="/produtos/publica" element={<ProdutoListPublic />} />
 
       {/* Rota restrita - só sem login */}
       <Route path="/login" element={<RestrictedRoute><LoginForm /></RestrictedRoute>} />
