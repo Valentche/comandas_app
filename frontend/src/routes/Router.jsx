@@ -46,19 +46,23 @@ const AppRoutes = () => (
       <Route path="/clientes" element={priv(<ClienteList />)} />
       <Route path="/cliente" element={priv(<ClienteForm />)} />
       <Route path="/cliente/:id" element={priv(<ClienteForm />)} />
-      <Route path="/produtos" element={priv(<ProdutoList />)} />
-      <Route path="/produto" element={priv(<ProdutoForm />)} />
-      <Route path="/produto/:id" element={priv(<ProdutoForm />)} />
+      <Route path="/produtos" element={<PrivateRoute><ProdutoList /></PrivateRoute>} />
+      <Route path="/produto" element={<PrivateRoute><ProdutoForm /></PrivateRoute>} />
+      {/* Rota para edição de produto */}
+      <Route path="/produto/:opr/:id" element={<PrivateRoute><ProdutoForm /></PrivateRoute>} />
       <Route path="/comandas" element={priv(<ComandaList />)} />
       <Route path="/comanda" element={priv(<ComandaForm />)} />
       <Route path="/comanda/:id" element={priv(<ComandaForm />)} />
       <Route path="/caixa" element={priv(<Caixa />)} />
       <Route path="/perfil" element={priv(<Perfil />)} />
+      
 
       {/* 404 */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   </Suspense>
 );
+
+
 
 export default AppRoutes;
