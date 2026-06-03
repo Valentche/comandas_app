@@ -16,6 +16,9 @@ const ClienteList = lazy(() => import("../components/pages/ClienteList"));
 const ClienteForm = lazy(() => import("../components/pages/ClienteForm"));
 const ProdutoList = lazy(() => import("../components/pages/ProdutoList"));
 const ProdutoForm = lazy(() => import("../components/pages/ProdutoForm"));
+const ProdutoListPublic = lazy(
+  () => import("../components/pages/ProdutoListPublic"),
+);
 const ComandaList = lazy(() => import("../components/pages/ComandaList"));
 const ComandaForm = lazy(() => import("../components/pages/ComandaForm"));
 const Caixa = lazy(() => import("../components/pages/Caixa"));
@@ -44,7 +47,7 @@ const AppRoutes = () => (
       <Route path="/" element={<Navigate to="/login" replace />} />
 
       {/* Rota pública */}
-      <Route path="/produtos/publica" element={<ProdutoList />} />
+      <Route path="/produtos/publica" element={<ProdutoListPublic />} />
 
       {/* Rota restrita - só sem login */}
       <Route

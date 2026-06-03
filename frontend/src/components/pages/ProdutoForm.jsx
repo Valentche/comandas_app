@@ -9,10 +9,10 @@ import {
   Typography,
 } from "@mui/material";
 import { PhotoCamera as PhotoCameraIcon } from "@mui/icons-material";
-import PageLayout from "../components/common/PageLayout";
-import { useValidationRules } from "../hooks/useValidationRules";
-import { produtoService } from "../services/produtoService";
-import showSnackbar from "../utils/snackbar";
+import PageLayout from "../common/PageLayout";
+import { useValidationRules } from "../../hooks/useValidationRules";
+import { produtoService } from "../../services/produtoService";
+import showSnackbar from "../../utils/snackbar";
 // Definição do componente ProdutoForm
 const ProdutoForm = () => {
   // Hooks de navegação e parâmetros
