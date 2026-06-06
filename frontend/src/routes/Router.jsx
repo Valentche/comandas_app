@@ -19,8 +19,11 @@ const ProdutoForm = lazy(() => import("../components/pages/ProdutoForm"));
 const ProdutoListPublic = lazy(
   () => import("../components/pages/ProdutoListPublic"),
 );
-const ComandaList = lazy(() => import("../components/pages/ComandaList"));
-const ComandaForm = lazy(() => import("../components/pages/ComandaForm"));
+// const ComandaList = lazy(() => import("../components/pages/ComandaList"));
+// const ComandaForm = lazy(() => import("../components/pages/ComandaForm"));
+const ComandaList = lazy(() => import("../pages/ComandaList"));
+const ComandaForm = lazy(() => import("../pages/ComandaForm"));
+const ComandaConsumoForm = lazy(() => import("../pages/ComandaConsumoForm"));
 const Caixa = lazy(() => import("../components/pages/Caixa"));
 const Perfil = lazy(() => import("../components/pages/Perfil"));
 const LoginForm = lazy(() => import("../components/forms/LoginForm"));
@@ -91,9 +94,10 @@ const AppRoutes = () => (
           </PrivateRoute>
         }
       />
-      <Route path="/comandas" element={priv(<ComandaList />)} />
-      <Route path="/comanda" element={priv(<ComandaForm />)} />
-      <Route path="/comanda/:id" element={priv(<ComandaForm />)} />
+      <Route path="/comandas" element={<PrivateRoute><ComandaList /></PrivateRoute>} />
+      <Route path="/comanda" element={<PrivateRoute><ComandaForm /></PrivateRoute>} />
+      <Route path="/comanda/:opr/:id" element={<PrivateRoute><ComandaForm /></PrivateRoute>} />
+      <Route path="/comanda/consumo/:id" element={<PrivateRoute><ComandaConsumoForm /></PrivateRoute>} />
       <Route path="/caixa" element={priv(<Caixa />)} />
       <Route path="/perfil" element={priv(<Perfil />)} />
 
