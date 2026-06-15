@@ -36,7 +36,7 @@ function ProdutoList() {
     limit: 3,
     currentPage: 1,
   }); // Estados para paginação
-  const [hasItems, setHasItems] = useState(true); // Controla se há itens na página atual, utilizado na paginação
+  const [hasNextPage, setHasNextPage] = useState(false); // Controla se existe uma próxima página (página atual veio completa)
   // Funções de navegação
   const handleView = (produto) => navigate(`/produto/view/${produto.id}`); // Navega para a página de visualização do produto
   const handleEdit = (produto) => navigate(`/produto/edit/${produto.id}`); // Navega para a página de edição do produto
@@ -109,9 +109,13 @@ function ProdutoList() {
           ...filters,
         }; // Parâmetros para a requisição
         const response = await produtoService.list(params); // Executa o serviço de listagem, passando os parâmetros
-        const produtosData = response.data || response; // Obtém os dados da resposta
+        // Extrai o array de produtos independente do formato retornado pela API
+        const produtosData = Array.isArray(response)
+          ? response
+          : response?.data ?? response?.items ?? response?.results ?? [];
         setProdutos(produtosData); // Atribui os produtos à lista
-        setHasItems(produtosData && produtosData.length > 0); // Define se há itens na página atual
+        // Há próxima página quando a página atual veio completa (=== limit)
+        setHasNextPage(produtosData.length === pagination.limit); // Controla o botão "Próxima"
       } catch (error) {
         showSnackbar("Erro ao carregar produtos", "error");
       } finally {
@@ -377,7 +381,7 @@ function ProdutoList() {
         onPageChange={handlePageChange}
         onItemsPerPageChange={handleItemsPerPageChange}
         loading={loading}
-        hasItems={hasItems}
+        hasNextPage={hasNextPage}
       />
     </PageLayout>
   );

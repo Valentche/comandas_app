@@ -45,15 +45,28 @@ const ProdutoFilters = ({
       [field]: value,
     }));
   };
+  // Campos que devem ser enviados como número (e não como texto) para a API
+  const numericFields = {
+    id: "int",
+    valor: "float",
+    valor_min: "float",
+    valor_max: "float",
+  };
   const handleFilter = () => {
     // Limpar valores vazios antes de enviar
     const cleanedFilters = Object.keys(filters).reduce((acc, key) => {
       const value = filters[key];
       if (value !== "" && value !== null && value !== undefined) {
-        acc[key] =
-          key === "valor_min" || key === "valor_max"
-            ? parseFloat(value)
-            : value;
+        const type = numericFields[key];
+        const parsed =
+          type === "int"
+            ? parseInt(value, 10)
+            : type === "float"
+              ? parseFloat(value)
+              : value;
+        // Ignora números inválidos (ex.: texto em campo numérico)
+        if (type && Number.isNaN(parsed)) return acc;
+        acc[key] = parsed;
       }
       return acc;
     }, {});

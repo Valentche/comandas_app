@@ -15,7 +15,7 @@ function ProdutoListPublic() {
     limit: 3,
     currentPage: 1,
   }); // Estados para paginação
-  const [hasItems, setHasItems] = useState(true); // Controla se há itens na página atual, utilizado na paginação
+  const [hasNextPage, setHasNextPage] = useState(false); // Controla se existe uma próxima página (página atual veio completa)
   // Funções de manipulação de filtros
   const handleFilter = (newFilters) => {
     setFilters(newFilters);
@@ -55,9 +55,13 @@ function ProdutoListPublic() {
           ...filters,
         }; // Parâmetros para a requisição
         const response = await produtoService.listPublic(params); // Executa o serviço de listagem pública, passando os parâmetros
-        const produtosData = response.data || response; // Obtém os dados da resposta
+        // Extrai o array de produtos independente do formato retornado pela API
+        const produtosData = Array.isArray(response)
+          ? response
+          : response?.data ?? response?.items ?? response?.results ?? [];
         setProdutos(produtosData); // Atribui os produtos à lista
-        setHasItems(produtosData && produtosData.length > 0); // Define se há itens na página atual
+        // Há próxima página quando a página atual veio completa (=== limit)
+        setHasNextPage(produtosData.length === pagination.limit); // Controla o botão "Próxima"
       } catch (error) {
         console.error("Erro ao carregar produtos públicos:", error);
       } finally {
@@ -204,7 +208,7 @@ function ProdutoListPublic() {
         onPageChange={handlePageChange}
         onItemsPerPageChange={handleItemsPerPageChange}
         loading={loading}
-        hasItems={hasItems}
+        hasNextPage={hasNextPage}
       />
     </PageLayout>
   );

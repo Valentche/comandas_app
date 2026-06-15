@@ -195,7 +195,7 @@ const ComandaConsumoForm = () => {
             Comanda {comanda.comanda}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Cliente: {comanda.cliente_id || "Não identificado"}
+            Cliente: {comanda.cliente?.nome || comanda.cliente_id || "Não identificado"}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Abertura: {new Date(comanda.data_hora).toLocaleString("pt-BR")}
@@ -203,6 +203,86 @@ const ComandaConsumoForm = () => {
         </Box>
       )}
       {/* Formulário para adicionar itens */}
+      <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mb: 4 }}>
+        <Typography variant="h6" sx={{ mb: 2 }}>
+          {editingItemId ? "Editar Item de Consumo" : "Adicionar Item de Consumo"}
+        </Typography>
+        <Box sx={{ display: "flex", gap: 2, mb: 2, flexWrap: "wrap", alignItems: "flex-start" }}>
+          {/* Campo Produto */}
+          <Controller
+            name="produto_id"
+            control={control}
+            rules={{ required: validationRules.required }}
+            render={({ field }) => (
+              <FormControl sx={{ flexGrow: 1, minWidth: 240 }} error={!!errors.produto_id}>
+                <InputLabel id="produto-label">Produto</InputLabel>
+                <Select
+                  {...field}
+                  labelId="produto-label"
+                  label="Produto"
+                  disabled={loading || loadingProdutos || !!editingItemId}
+                  value={field.value || ""}
+                >
+                  <MenuItem value="" disabled>
+                    Selecione um produto
+                  </MenuItem>
+                  {produtos.map((produto) => (
+                    <MenuItem key={produto.id} value={produto.id}>
+                      {produto.nome} - R$ {Number(produto.valor_unitario).toFixed(2)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+          />
+          {/* Campo Quantidade */}
+          <Controller
+            name="quantidade"
+            control={control}
+            rules={{
+              required: validationRules.required,
+              min: { value: 1, message: "Quantidade deve ser maior que 0" },
+            }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Quantidade"
+                type="number"
+                sx={{ width: 150 }}
+                error={!!errors.quantidade}
+                helperText={errors.quantidade?.message}
+                disabled={loading}
+              />
+            )}
+          />
+        </Box>
+        {/* Campo Funcionário (oculto - preenchido automaticamente com o usuário logado) */}
+        <Controller
+          name="funcionario_id"
+          control={control}
+          rules={{ required: validationRules.required }}
+          render={({ field }) => (
+            <input {...field} type="hidden" value={field.value || user?.id || ""} />
+          )}
+        />
+        {/* Botões de ação do formulário */}
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={loading || loadingProdutos}
+            startIcon={editingItemId ? <EditIcon /> : <AddIcon />}
+          >
+            {loading ? "Processando..." : editingItemId ? "Atualizar Item" : "Adicionar Item"}
+          </Button>
+          {editingItemId && (
+            <Button variant="outlined" onClick={handleCancelEdit} disabled={loading}>
+              Cancelar Edição
+            </Button>
+          )}
+        </Box>
+      </Box>
+
       {/* Lista de itens de consumo */}
       <Typography variant="h6" sx={{ mb: 2 }}>
         Itens de Consumo
@@ -272,97 +352,6 @@ const ComandaConsumoForm = () => {
       </Box>
     </PageLayout>
   );
-  {
-    /* Formulário para adicionar itens */
-  }
-  <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mb: 4 }}>
-    <Typography variant="h6" sx={{ mb: 2 }}>
-      Adicionar Item de Consumo
-    </Typography>
-    <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
-      {/* Campo Produto */}
-      <Controller
-        name="produto_id"
-        control={control}
-        rules={{ required: validationRules.required }}
-        render={({ field }) => (
-          <FormControl fullWidth>
-            <InputLabel id="produto-label">Produto</InputLabel>
-            <Select
-              {...field}
-              labelId="produto-label"
-              label="Produto"
-              disabled={loading || loadingProdutos || !!editingItemId}
-              value={field.value || ""}
-            >
-              <MenuItem value="" disabled>
-                Selecione um produto
-              </MenuItem>
-              {produtos.map((produto) => (
-                <MenuItem key={produto.id} value={produto.id}>
-                  {produto.nome} - R${" "}
-                  {Number(produto.valor_unitario).toFixed(2)}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        )}
-      />
-      {/* Campo Quantidade */}
-      <Controller
-        name="quantidade"
-        control={control}
-        rules={{
-          required: validationRules.required,
-          min: { value: 1, message: "Quantidade deve ser maior que 0" },
-        }}
-        render={({ field }) => (
-          <TextField
-            {...field}
-            label="Quantidade"
-            type="number"
-            sx={{ width: 150 }}
-            error={!!errors.quantidade}
-            helperText={errors.quantidade?.message}
-            disabled={loading}
-          />
-        )}
-      />
-    </Box>
-    {/* Campo Funcionário (oculto - preenchido automaticamente) */}
-    <Controller
-      name="funcionario_id"
-      control={control}
-      rules={{ required: validationRules.required }}
-      render={({ field }) => (
-        <input {...field} type="hidden" value={field.value || user?.id || ""} />
-      )}
-    />
-    {/* Botões de ação do formulário */}
-    <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
-      <Button
-        type="submit"
-        variant="contained"
-        disabled={loading || loadingProdutos}
-        startIcon={editingItemId ? <EditIcon /> : <AddIcon />}
-      >
-        {loading
-          ? "Processando..."
-          : editingItemId
-            ? "Atualizar Item"
-            : "Adicionar Item"}
-      </Button>
-      {editingItemId && (
-        <Button
-          variant="outlined"
-          onClick={handleCancelEdit}
-          disabled={loading}
-        >
-          Cancelar Edição
-        </Button>
-      )}
-    </Box>
-  </Box>;
 };
 
 export default ComandaConsumoForm;

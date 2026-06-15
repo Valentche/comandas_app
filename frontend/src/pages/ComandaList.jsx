@@ -47,7 +47,7 @@ function ComandaList() {
     limit: 10,
     currentPage: 1,
   }); // Estados para paginação
-  const [hasItems, setHasItems] = useState(true); // Controla se há itens na página atual, utilizado na paginação
+  const [hasNextPage, setHasNextPage] = useState(false); // Controla se existe uma próxima página (página atual veio completa)
   // Funções de navegação
   const handleView = (comanda) => navigate(`/comanda/view/${comanda.id}`); // Navega para a página de visualização da comanda
   const handleEdit = (comanda) => navigate(`/comanda/edit/${comanda.id}`); // Navega para a página de edição da comanda
@@ -129,9 +129,14 @@ function ComandaList() {
     const loadComandas = async () => {
       try {
         setLoading(true);
-        const data = await comandaService.list({ ...filters, ...pagination });
+        const response = await comandaService.list({ ...filters, ...pagination });
+        // Extrai o array de comandas independente do formato retornado pela API
+        const data = Array.isArray(response)
+          ? response
+          : response?.data ?? response?.items ?? response?.results ?? [];
         setComandas(data);
-        setHasItems(data.length > 0);
+        // Há próxima página quando a página atual veio completa (=== limit)
+        setHasNextPage(data.length === pagination.limit);
       } catch (error) {
         const mensagem = error.apiMessage || "Erro ao carregar comandas";
         showSnackbar(mensagem, "error");
@@ -374,7 +379,7 @@ function ComandaList() {
         onPageChange={handlePageChange}
         onItemsPerPageChange={handleItemsPerPageChange}
         loading={loading}
-        hasItems={hasItems}
+        hasNextPage={hasNextPage}
       />
     </PageLayout>
   );
